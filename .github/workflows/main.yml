@@ -1,0 +1,39 @@
+name: MLFlow CI/CD Pipeline
+ 
+on:
+  push:
+    branches:
+      - main  
+ 
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+    
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8 
+ 
+     
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install mlflow
+
+      - name: Run MLFlow experiment
+        run: |
+          mlflow run .  # You can replace this with your specific experiment
+ 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+ 
+    steps:
+      - name: Deploy to DagsHub
+        run: |
+          # Deploy code to DagsHub (use the appropriate commands if you're automating the push)
+          git push https://dagshub.com/mandarrele/<repo>.git
